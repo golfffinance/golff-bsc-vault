@@ -1,0 +1,45 @@
+module.exports = {
+    WBNB: {
+        main: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+        test: '0x6179c606c5796E9A17468838Bf6803E68bD49e00'
+    },
+    'CAKE-BNB': {
+        main: '0xA527a61703D82139F8a06Bc30097cC9CAA2df5A6',
+        test: '0x0fd06B286fAafCE7A919bd51d0a2ecAf61138Ae2'
+    },
+    LINK: {
+        main: '0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD',
+        test: '0x6014a0e0575cb0D799390EDbEA37c95DE0121afe'
+    },
+    FIL: {
+        main: '0x0D8Ce2A99Bb6e3B7Db580eD848240e4a0F9aE153',
+        test: '0x0242a3069950b04f48576cCc9261F9BE44fBA833'
+    },
+    USDT: {
+        main: '0x55d398326f99059fF775485246999027B3197955',
+        test: '0x82AD89164957c9E3D6f9F7d0636389cFA44917ca'
+    },
+    BUSD: {
+        main: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56'
+    },
+    XVS: {
+        main: '0xcF6BB5389c92Bdda8a3747Ddb454cB7a64626C63',
+        test: '0xCa52cfa49aDe8913CF177F06C71821e0A3D713Cc'
+    },
+    AUTO: {
+        main: '0xa184088a740c695E156F91f5cC086a06bb78b827',
+        test: '0x93e3A9d6e08a406e682bF49a9c9F2358e00b5B19'
+    },
+    MDX: {
+        main: '0x9C65AB58d8d978DB963e63f2bfB7121627e3a739',
+        test: '0x9390f0D3B1269a59528f4F47B9EE35094B80FB6f'
+    },
+    CAKE: {
+        main: '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82',
+        test: '0x9390f0D3B1269a59528f4F47B9EE35094B80FB6f'
+    },
+    ETH: {
+        main: '0x2170Ed0880ac9A755fd29B2688956BD959F933F8',
+        test: '0x9390f0D3B1269a59528f4F47B9EE35094B80FB6f'
+    }
+}
