@@ -26,20 +26,18 @@ contract GOFControllerV1 is IGOFController, Ownable{
     address public onesplit;
 
     address public rewards;
-    address public factory;
     mapping(address => address) public vaults;
     mapping(address => address) public strategies;
-    mapping(address => mapping(address => address)) public converters;
     
     mapping(address => mapping(address => bool)) public approvedStrategies;
 
     uint public split = 500;
     uint public constant max = 10000;
-    address constant public wbnb = address(0x5545153CCFcA01fbd7Dd11C0b23ba694D9509A6F);
+    address constant public wbnb = address(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
 
     constructor(address _rewards) public {
-        strategist = tx.origin;
-        onesplit = address(0xED7d5F38C79115ca12fe6C0041abb22F0A06C300);
+        strategist = msg.sender;
+        onesplit = address(0x7DAe51BD3E3376B8c7c4900E9107f12Be3AF1bA8);//mdex
         rewards = _rewards;
     }
     
@@ -48,45 +46,37 @@ contract GOFControllerV1 is IGOFController, Ownable{
         _;
     }
 
-    function setStrategist(address account) public checkStrategist{
+    function setStrategist(address account) external checkStrategist{
         strategist = account;
     }
-
-    function setFactory(address _factory) public onlyOwner{
-        factory = _factory;
-    }
     
-    function setSplit(uint _split) public onlyOwner{
+    function setSplit(uint _split) external onlyOwner{
         split = _split;
     }
     
-    function setOneSplit(address _onesplit) public onlyOwner{
+    function setOneSplit(address _onesplit) external onlyOwner{
         onesplit = _onesplit;
     }
     
-    function setRewards(address _rewards) public onlyOwner{
+    function setRewards(address _rewards) external onlyOwner{
         rewards = _rewards;
     }
     
-    function approveStrategy(address _token, address _strategy) public onlyOwner{
+    function approveStrategy(address _token, address _strategy) external onlyOwner{
         approvedStrategies[_token][_strategy] = true;
     }
 
-    function revokeStrategy(address _token, address _strategy) public onlyOwner{
+    function revokeStrategy(address _token, address _strategy) external onlyOwner{
         approvedStrategies[_token][_strategy] = false;
     }
 
-    function setVault(address _token, address _vault) public checkStrategist{
+    function setVault(address _token, address _vault) external checkStrategist{
         require(vaults[_token] == address(0), "Golff:vault exist");
         vaults[_token] = _vault;
     }
-
-    function setConverter(address _input, address _output, address _converter) public checkStrategist{
-        converters[_input][_output] = _converter;
-    }
     
-    function setStrategy(address _token, address _strategy) public checkStrategist{
-        require(approvedStrategies[_token][_strategy] == true, "Golff:!approved");
+    function setStrategy(address _token, address _strategy) external checkStrategist{
+        require(approvedStrategies[_token][_strategy], "Golff:!approved");
         address _current = strategies[_token];
         if (_current != address(0)) {
            IGOFStrategy(_current).withdrawAll();
@@ -104,14 +94,8 @@ contract GOFControllerV1 is IGOFController, Ownable{
     function earn(address _token, uint _amount) public override{
         address _strategy = strategies[_token]; 
         address _want = IGOFStrategy(_strategy).getWant();
-        if (_want != _token) {
-            address converter = converters[_token][_want];
-            IERC20(_token).safeTransfer(converter, _amount);
-            _amount = Converter(converter).convert(_strategy);
-            IERC20(_want).safeTransfer(_strategy, _amount);
-        } else {
-            IERC20(_token).safeTransfer(_strategy, _amount);
-        }
+        require(_want == _token, "Golff:_want != _token");
+        IERC20(_token).safeTransfer(_strategy, _amount);
         IGOFStrategy(_strategy).deposit();
     }
     
@@ -136,6 +120,7 @@ contract GOFControllerV1 is IGOFController, Ownable{
         address _want = IGOFStrategy(_strategy).getWant();
         // cal out amount
         address[] memory swap2TokenRouting;
+        swap2TokenRouting[0] = _token;
         swap2TokenRouting[1] = wbnb;
         swap2TokenRouting[2] = _want;
         uint256[] memory amountsOut = ISwapRouter(onesplit).getAmountsOut(_balance, swap2TokenRouting);

@@ -39,9 +39,9 @@ contract GOFVault is ERC20, Ownable, IGOFVaultMigrateable{
 
     mapping(address => UserInfo) public userInfo;
 
-    event Deposit(address payer, address account, uint256 amount);
-    event Withdraw(address account, uint256 amount);
-    event Migrate(address account, address newVault, uint256 amount);
+    event Deposit(address indexed payer, address indexed account, uint256 amount);
+    event Withdraw(address indexed account, uint256 amount);
+    event Migrate(address indexed account, address indexed newVault, uint256 amount);
     
     constructor (
         address _token, 
@@ -57,14 +57,15 @@ contract GOFVault is ERC20, Ownable, IGOFVaultMigrateable{
     }
 
     function setMin(uint _min) external onlyOwner{
+        require(_min <= max, "_min is over max");
         min = _min;
     }
 
-    function setController(address _controller) public onlyOwner{
+    function setController(address _controller) external onlyOwner{
         controller = _controller;
     }
 
-    function setEarnLowerlimit(uint256 _earnLowerlimit) public onlyOwner{
+    function setEarnLowerlimit(uint256 _earnLowerlimit) external onlyOwner{
         earnLowerlimit = _earnLowerlimit;
     }
     

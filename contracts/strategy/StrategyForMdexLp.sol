@@ -40,8 +40,8 @@ contract StrategyForMdexLp is IGOFStrategy, Ownable {
     address public mdexPool;
     address public swapRouter;
 
+    address constant public gof = address();
     address constant public wbnb = address(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
-    address constant public gof = address(0x2170Ed0880ac9A755fd29B2688956BD959F933F8);
     
     uint public burnfee = 400;
     uint public fee = 100;
@@ -58,7 +58,7 @@ contract StrategyForMdexLp is IGOFStrategy, Ownable {
     
     address public strategyDev;
     address public controller;
-    address public foundationAddress = address(0x1250E38187Ff89d05f99F3fa0E324241bbE2120C);
+    address public foundationAddress = address(0x399De25082895c4Ad79ecf3AeCF9556DDf59525C);
     address public burnAddress;
 
     string public getName;
@@ -81,7 +81,7 @@ contract StrategyForMdexLp is IGOFStrategy, Ownable {
             address _poolAddress,
             address _routerAddress, 
             address _burnAddress) public {
-        strategyDev = tx.origin;
+        strategyDev = msg.sender;
         controller = _controller;
         pid = _pid;
         want = _want;
@@ -262,11 +262,11 @@ contract StrategyForMdexLp is IGOFStrategy, Ownable {
                .add(balanceOfPool());
     }
 
-    function setController(address _controller) public onlyOwner{
+    function setController(address _controller) external onlyOwner{
         controller = _controller;
     }
     
-    function setFees(uint256 _foundationfee, uint256 _burnfee, uint256 _fee, uint256 _callfee) public onlyOwner{
+    function setFees(uint256 _foundationfee, uint256 _burnfee, uint256 _fee, uint256 _callfee) external onlyOwner{
         max = _fee.add(_callfee).add(_burnfee).add(_foundationfee);
 
         fee = _fee;
@@ -275,45 +275,45 @@ contract StrategyForMdexLp is IGOFStrategy, Ownable {
         foundationfee = _foundationfee;
     }
 
-    function setReservesRate(uint256 _reservesRate) public onlyOwner {
+    function setReservesRate(uint256 _reservesRate) external onlyOwner {
         require(_reservesRate < cashMax, "reservesRate >= 1000");
         reservesRate = _reservesRate;
     }
 
-    function setFoundationAddress(address _foundationAddress) public onlyOwner{
-        foundationAddress = _foundationAddress;
-    }
-
-    function setWithdrawalFee(uint _withdrawalFee) public onlyOwner{
+    function setWithdrawalFee(uint _withdrawalFee) external onlyOwner{
         require(_withdrawalFee <=100,"fee > 1%"); //max:1%
         withdrawalFee = _withdrawalFee;
     }
     
-    function setBurnAddress(address _burnAddress) public onlyOwner{
+    function setBurnAddress(address _burnAddress) external onlyOwner{
         burnAddress = _burnAddress;
     }
 
-    function setStrategyDev(address _strategyDev) public onlyOwner{
+    function setFoundationAddress(address _foundationAddress) external onlyOwner{
+        foundationAddress = _foundationAddress;
+    }
+
+    function setStrategyDev(address _strategyDev) external onlyOwner{
         strategyDev = _strategyDev;
     }
 
-    function setRouter(address _routerAddress) public onlyOwner{
+    function setRouter(address _routerAddress) external onlyOwner{
         swapRouter = _routerAddress;
     }
 
-    function setSwap2GOF(address[] memory _path) public onlyOwner{
+    function setSwap2GOF(address[] memory _path) external onlyOwner{
         swap2GOFRouting = _path;
     }
 
-    function setSwap2AToken(address[] memory _path) public onlyOwner{
+    function setSwap2AToken(address[] memory _path) external onlyOwner{
         swap2LiquidityARouting = _path;
     }
 
-    function setSwap2BToken(address[] memory _path) public onlyOwner{
+    function setSwap2BToken(address[] memory _path) external onlyOwner{
         swap2LiquidityBRouting = _path;
     }
 
-    function setSplitGof() public onlyOwner{
+    function setSplitGof() external onlyOwner{
         splitGof = !splitGof;
     }
 

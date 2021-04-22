@@ -68,10 +68,10 @@ contract GOFVaultBNB is ERC20, Ownable, IGOFVaultMigrateable {
         min = _min;
     }
 
-    function setController(address _controller) public onlyOwner{
+    function setController(address _controller) external onlyOwner{
         controller = _controller;
     }
-    function setEarnLowerlimit(uint256 _earnLowerlimit) public onlyOwner{
+    function setEarnLowerlimit(uint256 _earnLowerlimit) external onlyOwner{
       earnLowerlimit = _earnLowerlimit;
     }
 
