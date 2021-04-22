@@ -107,10 +107,6 @@ contract GOFControllerV1 is IGOFController, Ownable{
         IGOFStrategy(strategies[_token]).withdrawAll();
     }
     
-    function inCaseTokensGetStuck(address _token, uint _amount) public checkStrategist{
-        IERC20(_token).safeTransfer(owner(), _amount);
-    }
-    
     function inCaseStrategyTokenGetStuck(address _strategy, address _token) public checkStrategist{
         IGOFStrategy(_strategy).withdraw(_token);
     }
